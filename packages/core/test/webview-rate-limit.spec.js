@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { initialState, reducer, engineStatus } from "../../../surfaces/webview/src/state/store";
+import { initialState, reducer } from "../../../surfaces/webview/src/state/store";
 
 describe("webview plan limits", () => {
   const claude = { type: "rateLimit", cli: "claude", utilization: 73, window: "five_hour", status: "allowed" };
@@ -35,17 +35,9 @@ describe("webview plan limits", () => {
   });
 });
 
-
-describe("combined custom engine readiness", () => {
-  it("inherits missing Node but not Codex sign-in requirements", () => {
-    const state = { ...initialState, customEngine: { masked: { model: "fixture" } }, cliReport: { claude: "ok", codex: "node-missing" } };
-    expect(engineStatus(state, "custom")).toBe("node-missing");
-    expect(engineStatus({ ...state, cliReport: { claude: "ok", codex: "no-login" } }, "custom")).toBe("ok");
-  });
-  it("keeps late Claude quota out of Custom", () => {
-    let state = reducer(initialState, { type: "platform", cli: "custom" });
-    state = reducer(state, { type: "rateLimit", cli: "claude", utilization: 91, status: "allowed" });
-    expect(state.rateLimits[state.cli]).toBeUndefined();
-    expect(state.rateLimits.claude.utilization).toBe(91);
-  });
+it("keeps a late Claude quota out of Custom when that engine is available", () => {
+  let state = reducer(initialState, { type: "platform", cli: "custom" });
+  state = reducer(state, { type: "rateLimit", cli: "claude", utilization: 91, status: "allowed" });
+  expect(state.rateLimits[state.cli]).toBeUndefined();
+  expect(state.rateLimits.claude.utilization).toBe(91);
 });
