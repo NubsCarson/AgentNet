@@ -16,3 +16,12 @@ Validation:
 Recommended merge order: the focused #239–#243 and #244 first, then refresh #238 using the tested integration resolutions. This keeps each original review focused. Individual PR mergeability does not establish compatibility of the combined result.
 
 Raw test, build and typecheck output is alongside this file. Comment UI screenshots are attached to #244. Session-concurrency issue #113 and the remaining #208 read-recovery work are not fixed by this branch.
+
+
+## Follow-up: feed recovery and cloud-resume isolation
+
+Tested integration code `1f4134e4` includes #244 at `157be722` and #245 at `dc5672f0`, in addition to the earlier PRs. Conflict resolutions preserve custom engine dispatch, feed error state and optional threads, and the Windows dependencies. Runtime changes from #245 are applied before native engine resume.
+
+Latest result: 72 core files passed, 531 tests passed and 5 skipped. All 7 UI tests, core and localhost typechecks, and production webview build passed. Raw latest logs are attached. Individual CI for #244 and #245 passed as well.
+
+#245 deliberately changes cloud resume into a labeled branch on each persisted resume; its copy/storage costs and acceptance limits are documented in docs/qa/cloud-resume. The integration branch does not mean maintainer acceptance, merge, deployment, or real two-device Drive verification.
