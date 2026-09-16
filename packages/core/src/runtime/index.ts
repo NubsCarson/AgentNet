@@ -132,6 +132,19 @@ export function createRuntime(
   return {
     async startSession(opts): Promise<SessionHandle> {
       const device = await getDeviceProfile();
+      // A mirrored page has no conditional-write primitive. A preflight read or
+      // running marker cannot fence a concurrent/offline writer, so a persisted
+      // cloud resume always starts a distinct branch before any metadata write.
+      // Local-only and ephemeral resumes retain their existing behavior.
+      let resumeTitle: string | undefined;
+      if (opts.sessionId && !opts.ephemeral && storage.cloudState && storage.cloudState() !== "none") {
+        const source = await store.load(opts.sessionId);
+        if (!source) throw new Error(`Could not load session ${opts.sessionId}; original history was not changed.`);
+        const branchId = randomUUID();
+        resumeTitle = `${source.title.replace(/ \[cloud resume [^\]]+\]$/, "")} [cloud resume ${branchId.slice(0, 8)}]`;
+        await store.fork(opts.sessionId, branchId, resumeTitle);
+        opts = { ...opts, sessionId: branchId };
+      }
       // RESUME: opts.sessionId is the CANONICAL id. Rewrite its history into the
       // target cli's native jsonl and resume under the NATIVE id (claude/codex only
       // accept their own ids) — this is what lets a session cross between CLIs.
@@ -209,7 +222,7 @@ export function createRuntime(
       // Storage key stays the CANONICAL id while resuming; the cli's emitted (native)
       // id must NOT overwrite it, or appended turns land in the wrong log.
       let sessionId = opts.sessionId ?? ""; // canonical; "" until a fresh cli reveals it
-      let title = "";
+      let title = resumeTitle ?? "";
       const msgCbs: Array<(m: ChatMessage) => void> = [];
       const turnCbs: Array<() => void> = [];
       const skillCbs: Array<(skill: SkillActivation) => void> = [];

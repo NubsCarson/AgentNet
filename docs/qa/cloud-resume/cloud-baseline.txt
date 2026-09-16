@@ -1,0 +1,71 @@
+
+ RUN  v4.1.8 /Users/nubs/Git/AgentNet-feed-read-20260916/packages/core
+
+stderr | src/runtime/cloud-resume.baseline.spec.ts
+bigint: Failed to load bindings, pure JS will be used (try npm run rebuild?)
+
+ ❯ src/runtime/cloud-resume.baseline.spec.ts (5 tests | 3 failed) 388ms
+     × preserves both writers across a page boundary in a fresh cloud reader 200ms
+     × refuses to fork missing pages instead of copying partial history 71ms
+     × offline resumes write a separate branch that backfill can recover 80ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/runtime/cloud-resume.baseline.spec.ts > cloud resume writer isolation > preserves both writers across a page boundary in a fresh cloud reader
+AssertionError: expected 'shared' not to be 'shared' // Object.is equality
+ ❯ src/runtime/cloud-resume.baseline.spec.ts:38:28
+     36|   const a=createRuntime(wallet,mirrorStorage(localA,cloud)),b=createRu…
+     37|   const [ha,hb]=await Promise.all([a.startSession({cli:"claude",cwd:ho…
+     38|   expect(ha.sessionId).not.toBe("shared"); expect(hb.sessionId).not.to…
+       |                            ^
+     39|   ha.send("기기 A의 새 메시지");hb.send("device B new message");
+     40|   await vi.waitFor(async()=>{
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  src/runtime/cloud-resume.baseline.spec.ts > cloud resume writer isolation > refuses to fork missing pages instead of copying partial history
+AssertionError: promise resolved "{ messages: 1 }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "messages": 1,
+  }
+
+ ❯ src/runtime/cloud-resume.baseline.spec.ts:63:54
+     61|   for(let i=0;i<=PAGE_SIZE;i++)await store.appendMessage(meta,{role:"u…
+     62|   await storage.remove("shared__p0");
+     63|   await expect(store.fork("shared","branch","Branch")).rejects.toThrow…
+       |                                                      ^
+     64|   expect((await storage.list()).some(k=>k.startsWith("branch__p"))).to…
+     65|  });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  src/runtime/cloud-resume.baseline.spec.ts > cloud resume writer isolation > offline resumes write a separate branch that backfill can recover
+AssertionError: expected [ { role: 'user', …(2) }, …(1) ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ src/runtime/cloud-resume.baseline.spec.ts:82:75
+     80|   h.send("offline branch message");
+     81|   await vi.waitFor(async()=>expect((await new SessionStore(wallet,loca…
+     82|   expect((await new SessionStore(wallet,local).load("shared"))?.messag…
+       |                                                                           ^
+     83|   // Let the failed deferred upload settle before reconnecting.
+     84|   await new Promise(resolve=>setTimeout(resolve,2700));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 2 passed (5)
+   Start at  02:49:21
+   Duration  1.44s (transform 294ms, setup 0ms, import 889ms, tests 388ms, environment 0ms)
