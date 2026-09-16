@@ -1,0 +1,9 @@
+
+ RUN  v4.1.8 /Users/nubs/Git/AgentNet-combined-fixes-20260916/surfaces/webview
+
+
+ Test Files  1 passed (1)
+      Tests  4 passed (4)
+   Start at  02:35:59
+   Duration  1.22s (transform 209ms, setup 0ms, import 284ms, tests 191ms, environment 578ms)
+

@@ -1,0 +1,9 @@
+
+ RUN  v4.1.8 /Users/nubs/Git/AgentNet-combined-fixes-20260916/packages/core
+
+
+ Test Files  70 passed (70)
+      Tests  521 passed | 5 skipped (526)
+   Start at  02:35:57
+   Duration  12.99s (transform 3.34s, setup 0ms, import 11.14s, tests 42.26s, environment 5ms)
+
