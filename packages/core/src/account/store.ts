@@ -227,7 +227,7 @@ export class SessionStore {
     const messages: ChatMessage[] = [];
     for (let p = 0; p <= last; p++) {
       const page = await this.loadPage(srcId, p);
-      if (!page) continue;
+      if (!page) throw new Error(`Could not read session page ${p}; refusing an incomplete fork of ${srcId}`);
       // Newest readable page wins: it carries the session's CURRENT settings (cli/model/
       // effort), which is what the copy should wake up wearing.
       meta = { sessionId: newId, cli: page.cli, title, ts: page.ts, lastDevice: page.lastDevice, model: page.model, effort: page.effort };
