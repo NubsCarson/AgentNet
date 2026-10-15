@@ -209,6 +209,7 @@ export function PublishForm({ onBack, initialKind = "skill", initialDraft }: Pro
           <SkillIcon className="h-10 w-10" style={{ color: fg.accent }} />
           <p className="an-term-mono" style={{ margin: 0, fontWeight: 700, fontSize: 14, letterSpacing: "0.1em", textTransform: "uppercase", color: fg.accent }}>&gt;{kind === "workflow" ? "Workflow_Minted" : "Skill_Minted"}<span className="unlock-cursor">_</span></p>
           {result.mint && <p className="font-mono text-[11px]" style={{ color: "var(--an-term-fg-6)", wordBreak: "break-all", maxWidth: 280 }}>{result.mint}</p>}
+          <p className="max-w-sm text-xs leading-relaxed" style={{ color: "var(--an-term-fg-3)" }}>Published on-chain. It may take a few minutes to appear in Market. No need to publish again.</p>
           <button onClick={() => { haptics.tick(); clearPublishResult(); onBack(); }} className="an-term-mono" style={{ marginTop: 6, fontWeight: 700, fontSize: 11, letterSpacing: "0.12em", textTransform: "uppercase", color: fg.accent, background: "none", border: 0, cursor: "pointer" }}>&gt; Back_to_Market [&gt;]</button>
         </div>
       </div>
